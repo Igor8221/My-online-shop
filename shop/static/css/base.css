@@ -122,6 +122,16 @@ ul.errorlist {
     overflow:auto;
 }
 
+.login-link {
+    margin-left: 900px; /* Сдвигаем ссылку вправо */
+}
+
+.align-right {
+    
+    margin-left: 900px;
+}
+
+
 #subheader {
     background:#ececec;
     color:#444;
