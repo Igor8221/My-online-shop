@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Изменение номера телефона{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Изменение номера телефона</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-warning">Сохранить</button>
+        <a href="{% url 'profile' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}

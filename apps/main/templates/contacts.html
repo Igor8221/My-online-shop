@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Контакты{% endblock %}
+
+{% block content %}
+<h1 class="text-center mb-4">Контакты</h1>
+
+<div class="contact-info">
+    <h3>Основная информация</h3>
+    <p><strong>Телефон:</strong> 8 (901) 234 56 78</p>
+    <p><strong>Адрес:</strong> г.Тестовск, ул. Тестовая, 12, пом. 34</p>
+    <p><strong>Часы работы:</strong> ежедневно с 10:00 до 20:00</p>
+    <p><strong>E-mail:</strong> <a href="mailto:test@example.com">test@example.com</a></p>
+</div>
+
+<div class="contact-info mt-4">
+    <h3>Юридическая информация</h3>
+    <p><strong>ИП Тест Первый</strong></p>
+    <ul>
+        <li>ИНН: 1234567890</li>
+        <li>ОГРНИП: 123456789012345</li>
+    </ul>
+
+    <p><strong>ИП Тест Второй</strong></p>
+    <ul>
+        <li>ИНН: 5432109876</li>
+        <li>ОГРНИП: 543210987654321</li>
+    </ul>
+</div>
+
+<style>
+    .contact-info {
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+
+    .contact-info a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .contact-info a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}

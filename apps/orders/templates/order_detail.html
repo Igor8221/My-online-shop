@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Заказ №{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Заказ №{{ order.id }}</h2>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Дата заказа:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+            <p><strong>Общая стоимость:</strong> {{ order.total_price }} ₽</p>
+
+            <h4>Статус заказа:</h4>
+            <div class="alert 
+                {% if order.status == 'PENDING' %}alert-warning
+                {% elif order.status == 'PROCESSING' %}alert-primary
+                {% elif order.status == 'SHIPPED' %}alert-info
+                {% elif order.status == 'DELIVERED' %}alert-success
+                {% elif order.status == 'CANCELLED' %}alert-danger
+                {% endif %}">
+                <strong>
+                    {% if order.status == 'PENDING' %} ⏳ Ожидает обработки
+                    {% elif order.status == 'PROCESSING' %} 🔄 В обработке
+                    {% elif order.status == 'SHIPPED' %} 🚚 Отправлен
+                    {% elif order.status == 'DELIVERED' %} ✅ Доставлен
+                    {% elif order.status == 'CANCELLED' %} ❌ Отменен
+                    {% endif %}
+                </strong>
+            </div>
+
+            {% if request.user.is_staff %}
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.status.id_for_label }}" class="form-label">Изменить статус:</label>
+                        {{ form.status }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <h4 class="mb-3">Товары в заказе:</h4>
+    <ul class="list-group">
+        {% for item in order.items.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ item.product.name }}</strong><br>
+                    <small>{{ item.quantity }} шт. × {{ item.price }} ₽</small>
+                </div>
+                <span class="badge bg-secondary">{{ item.total_price }} ₽</span>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="mt-4">
+        <a href="{% url 'profile' %}" class="btn btn-secondary">Назад</a>
+    </div>
+</div>
+{% endblock %}

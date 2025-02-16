@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить/Редактировать новость{% endblock %}
+
+{% block content %}
+<h1>{% if news.pk %}Редактировать новость{% else %}Добавить новость{% endif %}</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="mb-3">
+        <label for="id_image" class="form-label">Фотография</label>
+        {{ form.image }}
+        {{ form.image.errors }}
+    </div>
+    <div class="mb-3">
+        <label for="id_title" class="form-label">Заголовок</label>
+        {{ form.title }}
+        {{ form.title.errors }}
+    </div>
+    <div class="mb-3">
+        <label for="id_tags" class="form-label">Теги</label>
+        {{ form.tags }}
+        {{ form.tags.errors }}
+    </div>
+    <div class="mb-3">
+        <label for="id_text" class="form-label">Текст</label>
+        {{ form.text }}
+        {{ form.text.errors }}
+    </div>
+    <div class="mb-3">
+        <label for="id_published_at" class="form-label">Дата публикации</label>
+        {{ form.published_at }}
+        {{ form.published_at.errors }}
+    </div>
+    <button type="submit" class="btn btn-success">{% if news.pk %}Сохранить{% else %}Добавить{% endif %}</button>
+    <a href="{% url 'news_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock content %}

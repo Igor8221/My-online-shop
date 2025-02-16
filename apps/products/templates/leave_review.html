@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Оставить отзыв для {{ product.name }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="rating">Рейтинг</label>
+            <select class="form-control" id="rating" name="rating" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="text">Текст отзыва</label>
+            <textarea class="form-control" id="text" name="text" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}{{ news.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ news.title }}</h1>
+<p>Опубликовано: {{ news.published_at|date:"d M Y H:i" }}</p>
+<img src="{{ news.image.url }}" alt="{{ news.title }}" style="max-width: 100%;">
+<p>{{ news.text }}</p>
+<p>Теги: {{ news.tags.all|join:", " }}</p>
+<a href="{% url 'news_list' %}" class="btn btn-secondary mt-3">Назад к новостям</a>
+{% endblock content %}

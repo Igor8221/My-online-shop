@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Все заказы{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Все заказы</h2>
+    <div class="list-group">
+        {% for order in orders %}
+            <a href="{% url 'order_detail' order.id %}" class="list-group-item list-group-item-action">
+                <h5 class="mb-1">Заказ №{{ order.id }}</h5>
+                <p class="mb-1">Статус: {{ order.status }}</p>
+                <small>Дата заказа: {{ order.created_at }}</small>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

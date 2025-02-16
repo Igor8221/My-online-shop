@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить новый товар{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Добавить новый товар</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="name" class="form-label">Название товара</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Цена</label>
+            <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Категория</label>
+            <select class="form-select" id="category" name="category" required>
+                <option value="">Выберите категорию</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="main_image" class="form-label">Главное изображение товара</label>
+            <input type="file" class="form-control" id="main_image" name="main_image">
+        </div>
+        <div class="mb-3">
+            <label for="additional_images" class="form-label">Дополнительные изображения</label>
+            <input type="file" class="form-control" id="additional_images" name="additional_images" multiple>
+        </div>
+        <div class="mb-3">
+            <label for="characteristics" class="form-label">Характеристики товара</label>
+            <div id="characteristics">
+            </div>
+            <button type="button" class="btn btn-primary" id="add-characteristic">Добавить характеристику</button>
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить товар</button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('add-characteristic').addEventListener('click', function() {
+            const newCharacteristic = document.createElement('div');
+            newCharacteristic.classList.add('input-group', 'mb-2');
+            newCharacteristic.innerHTML = `
+                <input type="text" class="form-control" name="characteristics_name[]" placeholder="Название характеристики">
+                <input type="text" class="form-control" name="characteristics_value[]" placeholder="Значение характеристики">
+                <button type="button" class="btn btn-danger remove-characteristic">Удалить</button>
+            `;
+            document.getElementById('characteristics').appendChild(newCharacteristic);
+
+            newCharacteristic.querySelector('.remove-characteristic').addEventListener('click', function() {
+                newCharacteristic.remove();
+            });
+        });
+    });
+</script>
+{% endblock %}

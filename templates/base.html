@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        {% block styles %}
+        /* Основные стили для body и html */
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        /* Контейнер для основной части страницы */
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+
+        /* Основной контейнер с контентом */
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Сторонняя панель */
+        .sidebar {
+            width: 20%;
+            padding-left: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+
+        /* Основной контент */
+        .main-content {
+            flex: 1;
+            padding-right: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Футер */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: auto; /* Выталкивает футер внизу */
+        }
+
+        /* Карточки категорий и новостей */
+        .category-card, .news-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-card h5, .news-card h5 {
+            font-size: 1rem; /* Уменьшенный шрифт для категорий */
+            margin-bottom: 10px;
+        }
+
+        .category-card a, .news-card a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .category-card a:hover, .news-card a:hover {
+            color: #007bff;
+        }
+
+        /* Стилизация для новостей */
+        .news-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        {% endblock %}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Навигационная панель -->
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid justify-content-center">
+                <a class="navbar-brand" href="{% url 'index'%}">TechMix</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'index'%}">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about-store' %}">О магазине</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'news_list' %}">Новости</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'contacts'%}">Контакты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'warranty'%}">Гарантия</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'spocoby-pokupki' %}">Способы покупки</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'trade-in' %}">TRADE-IN</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'profile' %}">
+                                    <i class="bi bi-person-circle"></i> Личный кабинет
+                                </a>
+                            </li>
+                            <!-- Добавлена ссылка на корзину -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cart' %}">
+                                    <i class="bi bi-cart-fill"></i> Корзина
+                                    {% if cart_has_items %}
+                                    <span class="badge bg-danger">!</span>
+                                    {%endif%}
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">Регистрация</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Вход</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="alert-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill text-success{% elif message.tags == 'error' %}bi-exclamation-triangle-fill text-danger{% elif message.tags == 'warning' %}bi-exclamation-circle-fill text-warning{% elif message.tags == 'info' %}bi-info-circle-fill text-info{% endif %}"></i>
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="container content-wrapper mt-4">
+            <div class="sidebar">
+                <h5>Категории</h5>
+                <div id="categories-list">
+                    {% for category in categories %}
+                    {% empty %}
+                        <p>Категории не найдены.</p>
+                    {% endfor %}
+                </div>
+            
+                <h5>Последние новости</h5>
+                <div id="latest-news-list">
+                    {% for news in latest_news %}
+                    {% empty %}
+                        <p>Новости не найдены.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Блок с контентом -->
+            <div class="main-content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+        <!-- Футер -->
+        <div class="footer">
+            <p>© 2025 TechMix. Все права защищены.</p>
+        </div>
+    </div>
+
+    {% block script %}
+        <script src="{% static 'customJS/api_loader.js' %}"></script>
+        <script src="{% static 'customJS/messages.js' %}"></script>
+        <script src="{% static 'js/popper.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    {% endblock %}
+</body>
+</html>

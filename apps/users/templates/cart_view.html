@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Корзина</h2>
+
+        {% if cart.items.count == 0 %}
+            <p>В вашей корзине нет товаров.</p>
+        {% else %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Количество</th>
+                        <th>Цена</th>
+                        <th>Удалить</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart.items.all %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.total_price }}</td>
+                            <td>
+                                <a href="{% url 'remove_from_cart' item.product.id %}" class="btn btn-danger">Удалить</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h4>Общая стоимость: {{ cart.total_price }}</h4>
+
+            <a href="{% url 'checkout' %}" class="btn btn-success">Перейти к оформлению заказа</a>
+            <a href="{% url 'index' %}" class="btn btn-primary">Назад к покупкам</a>
+
+        {% endif %}
+
+    </div>
+{% endblock %}

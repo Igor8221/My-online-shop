@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">{{ product.name }}</h2>
+    <div class="row">
+        <div class="col-md-6">
+            {% if product.main_image and product.main_image.image %}
+                <img src="{{ product.main_image.image.url }}" class="img-fluid rounded shadow mb-3" alt="{{ product.name }}">
+            {% else %}
+                <img src="https://via.placeholder.com/500" class="img-fluid rounded shadow mb-3" alt="Изображение не доступно">
+            {% endif %}
+
+            {% if product.images.count > 1 %}
+                <div class="row mt-2">
+                    {% for image in product.images.all %}
+                        {% if not image.is_main %}
+                            <div class="col-4">
+                                <img src="{{ image.image.url }}" class="img-thumbnail" alt="Дополнительное изображение">
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <div class="product-details">
+                <p><strong>Описание:</strong> {{ product.description }}</p>
+                <p><strong>Цена:</strong> {{ product.price }} руб.</p>
+                <p><strong>Рейтинг:</strong>
+                    <span class="text-warning">
+                        {% for i in "12345" %}
+                            {% if product.rating >= i|add:0 %}
+                                <i class="fas fa-star"></i>
+                            {% elif product.rating > i|add:"-1" %}
+                                <i class="fas fa-star-half-alt"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    ({{ product.rating }})
+                </p>
+                <p><strong>Категория:</strong> {{ product.category.name }}</p>
+
+                {% if product.characteristics.count > 0 %}
+                    <h4>Характеристики:</h4>
+                    <ul class="list-unstyled">
+                        {% for characteristic in product.characteristics.all %}
+                            <li><strong>{{ characteristic.name }}:</strong> {{ characteristic.value }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Нет характеристик для этого товара.</p>
+                {% endif %}
+            </div>
+
+            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary mt-3">Купить</a>
+            <a href="{% url 'leave_review' product.id %}" class="btn btn-success mt-3">Оставить отзыв</a>
+
+            {% if user.is_staff %}
+                <a href="{% url 'edit_product' product.id %}" class="btn btn-warning mt-3">Редактировать карточку</a>
+            {% endif %}
+
+           <!--  Добавил удаление -->
+            {% if user.is_staff %}
+            <a href="{% url 'delete_product' product.id %}" class="btn btn-danger mt-3">Удалить карточку</a>
+            {% endif %}
+
+            <a href="{% url 'product_list' %}" class="btn btn-secondary mt-3">Назад к списку товаров</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Изменить почту{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Изменить почту</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="email">Новый email:</label>
+        <input type="email" name="email" class="form-control" required>
+        <button type="submit" class="btn btn-primary mt-3">Изменить почту</button>
+    </form>
+</div>
+{% endblock %}

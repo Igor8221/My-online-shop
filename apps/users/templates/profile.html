@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Личный кабинет</h2>
+    <p>Добро пожаловать, {{ user.username }}!</p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Данные аккаунта</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Имя:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+
+            <form method="POST" action="{% url 'change_name' %}" class="d-inline">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">Имя</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control" value="{{ user.first_name }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Фамилия</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control" value="{{ user.last_name }}" required>
+                </div>
+                <button type="submit" class="btn btn-warning">Сохранить изменения</button>
+            </form>
+            <hr>
+
+            <p><strong>Телефон:</strong> {{ user.phone_number }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5><i class="bi bi-receipt"></i> Ваши заказы</h5>
+        </div>
+        <div class="card-body">
+            {% if user.orders.all %}
+                <div class="row">
+                    {% for order in user.orders.all %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="bi bi-box-seam"></i> Заказ #{{ order.id }}
+                                    </h6>
+                                    <p class="card-text text-muted mb-1">
+                                        <i class="bi bi-calendar"></i> Дата: {{ order.created_at|date:"d.m.Y H:i" }}
+                                    </p>
+                                    <p class="mb-2">
+                                        <i class="bi bi-tag"></i> Статус:
+                                        <span class="badge 
+                                            {% if order.status == 'PENDING' %} bg-warning 
+                                            {% elif order.status == 'PROCESSING' %} bg-primary 
+                                            {% elif order.status == 'SHIPPED' %} bg-info 
+                                            {% elif order.status == 'DELIVERED' %} bg-success 
+                                            {% elif order.status == 'CANCELLED' %} bg-danger {% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </p>
+                                    <a href="{% url 'order_detail' order.id %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-eye"></i> Просмотреть
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">У вас пока нет заказов.</p>
+            {% endif %}
+        </div>
+    </div>
+
+
+    {% if user.is_staff %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Управление магазином</h5>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'order_list' %}" class="btn btn-primary">Посмотреть все заказы</a>
+            <a href="{% url 'add_category' %}" class="btn btn-success">Добавить новую категорию</a>
+            <a href="{% url 'add_product' %}" class="btn btn-warning">Добавить новый товар</a>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Управление категориями</h5>
+        </div>
+        <div class="card-body">
+            {% if categories %}
+                <ul class="list-group">
+                    {% for category in categories %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ category.name }}
+                            <div>
+                                <form action="{% url 'delete_category' category.id %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Категорий пока нет.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="mb-4">
+        <a href="{% url 'change_email' %}" class="btn btn-warning">Изменить почту</a>
+        <a href="{% url 'change_password' %}" class="btn btn-info">Изменить пароль</a>
+        <a href="{% url 'change_phone' %}" class="btn btn-warning">Изменить номер телефона</a>
+    </div>
+
+    <div>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Выйти</a>
+    </div>
+</div>
+{% endblock %}

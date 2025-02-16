@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Авторизация{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Вход</h2>
+
+    <ul class="nav nav-tabs" id="loginTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="username-tab" data-bs-toggle="tab" href="#username" role="tab" aria-controls="username" aria-selected="true">По Логину</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="email-tab" data-bs-toggle="tab" href="#email" role="tab" aria-controls="email" aria-selected="false">По Email</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="phone-tab" data-bs-toggle="tab" href="#phone" role="tab" aria-controls="phone" aria-selected="false">По Номеру телефона</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="loginTabContent">
+        <div class="tab-pane fade show active" id="username" role="tabpanel" aria-labelledby="username-tab">
+            <form method="POST" id="usernameForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username_input">Логин</label>
+                    <input type="text" class="form-control" id="username_input" name="username_or_email_or_phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="email" role="tabpanel" aria-labelledby="email-tab">
+            <form method="POST" id="emailForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="email_input">Email</label>
+                    <input type="email" class="form-control" id="email_input" name="username_or_email_or_phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
+        </div>
+
+        <div class="tab-pane fade" id="phone" role="tabpanel" aria-labelledby="phone-tab">
+            <form method="POST" id="phoneForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="phone_input">Номер телефона</label>
+                    <input type="text" class="form-control" id="phone_input" name="username_or_email_or_phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function validatePhoneNumber(phone) {
+    const regex = /^(?:\+7|7|8)?[9]\d{9}$/;
+    return regex.test(phone);
+}
+
+    document.querySelector('#phoneForm').addEventListener('submit', function(e) {
+        const phoneInput = document.getElementById('phone_input');
+        const phoneValue = phoneInput.value;
+
+        if (!validatePhoneNumber(phoneValue)) {
+            e.preventDefault();
+            alert('Введите корректный российский номер телефона!');
+        }
+    });
+</script>
+
+{% endblock %}
