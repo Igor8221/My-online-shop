@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">{{ category.name }}</h2>
+    <!-- <h2 class="mb-4">{{ category.name }}</h2> -->
 
     <div class="row justify-content-center">
         {% if products %}
@@ -28,12 +28,11 @@
                         {% endif %}
 
                         <div class="card-body d-flex flex-column justify-content-between">
-                            <h5 class="card-title text-truncate"
+                            <h5 class="card-title"
                                 onclick="location.href='{% url 'product_detail' product.id %}'">
                                 {{ product.name }}
                             </h5>
-                            <p class="card-text text-muted">{{ product.description|truncatewords:15 }}</p>
-                            <p class="card-text">
+                            
                                 <strong>Цена:</strong> <span class="text-success">{{ product.price }} руб.</span>
                             </p>
 

@@ -11,6 +11,7 @@ urlpatterns = [
     path('news/', views.news_list, name='news_list'),
     path('news/<int:pk>/', views.news_detail, name='news_detail'),
     path('news/create/', views.news_create, name='news_create'),
+    path('news/delete/<int:pk>/', views.news_delete, name='news_delete'),
     path('contacts/', views.contacts, name='contacts'),
     path('warranty/', views.warranty, name='warranty'),
     path('spocoby-pokupki/', views.spocoby_pokupki, name='spocoby-pokupki'),

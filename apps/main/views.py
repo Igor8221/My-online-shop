@@ -1,5 +1,5 @@
 import requests
-
+from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CategorySerializer, NewsSerializer, ProductSerializer
@@ -58,6 +58,13 @@ def news_create(request):
         form = NewsForm()
     
     return render(request, 'news_form.html', {'form': form})
+
+def news_delete(request, pk):
+    news = get_object_or_404(News, pk=pk)
+    if request.user.is_staff:
+        news.delete()
+        messages.success(request, "Новость успешно удалена.")
+    return redirect('news_list')
 
 def warranty(request):
     return render(request, 'warranty.html')

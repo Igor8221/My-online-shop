@@ -5,7 +5,7 @@
 {% block content %}
 <h1 class="text-center mb-4">Новости</h1>
 {% if user.is_staff %}
-    <div class="text-end mb-3">
+    <div class="text-center mb-3">   <!--  !!! -->
         <a href="{% url 'news_create' %}" class="btn btn-primary">Добавить новость</a>
     </div>
 {% endif %}

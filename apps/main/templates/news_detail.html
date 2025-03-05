@@ -3,10 +3,29 @@
 {% block title %}{{ news.title }}{% endblock %}
 
 {% block content %}
+
+<!-- Вывод сообщений Django -->
+{% if messages %}
+{% for message in messages %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+{% endif %}
+
 <h1>{{ news.title }}</h1>
 <p>Опубликовано: {{ news.published_at|date:"d M Y H:i" }}</p>
 <img src="{{ news.image.url }}" alt="{{ news.title }}" style="max-width: 100%;">
 <p>{{ news.text }}</p>
 <p>Теги: {{ news.tags.all|join:", " }}</p>
 <a href="{% url 'news_list' %}" class="btn btn-secondary mt-3">Назад к новостям</a>
+
+{% if user.is_staff %}
+<form action="{% url 'news_delete' news.pk %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger mt-3" onclick="return confirm('Вы уверены, что хотите удалить эту новость?');">
+        Удалить новость
+    </button>
+</form>
+{% endif %}
 {% endblock content %}

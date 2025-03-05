@@ -14,6 +14,7 @@
         body, html {
             height: 100%;
             margin: 0;
+            
         }
 
         /* Контейнер для основной части страницы */
@@ -26,7 +27,9 @@
         /* Основной контейнер с контентом */
         .content-wrapper {
             display: flex;
-            flex: 1;
+            flex: 2;
+            margin-left: 34px; /* Регулирует отступ слева */
+            margin-right: 0px; /* Регулирует отступ справа */
         }
 
         /* Сторонняя панель */
@@ -49,7 +52,8 @@
             flex: 1;
             padding-right: 20px;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 0 0 0 150px;
+            
         }
 
         /* Футер */
@@ -93,6 +97,31 @@
             margin-bottom: 10px;
         }
 
+       /*  .navbar {
+    background-color: #5f6a75 !important; 
+    margin-bottom: 30px;
+        }
+
+        .navbar .nav-link {
+    color: white !important; 
+        }
+
+        .navbar .nav-link:hover {
+    color: #f8d210 !important; 
+        }
+
+        .navbar-brand {
+    color: white !important;
+        }
+
+        .navbar-toggler-icon {
+    filter: invert(1); 
+        }
+        .content-wrapper {
+    margin-top: 90px; 
+        .wrapper {
+    padding-top: 120px; 
+        } */
         {% endblock %}
     </style>
 </head>
@@ -100,13 +129,13 @@
     <div class="wrapper">
         <!-- Навигационная панель -->
         <nav class="navbar navbar-expand-lg navbar-light">
-            <div class="container-fluid justify-content-center">
-                <a class="navbar-brand" href="{% url 'index'%}">TechMix</a>
+            <div class="container-fluid justify-content">      <!--  !!! -->
+                <a class="navbar-brand" style="margin-left: 80px;" href="{% url 'index'%}">TechMix</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
+                <div class="collapse navbar-collapse justify-content" id="navbarNav">      <!--  !!! -->
+                    <ul class="navbar-nav gap-3"> <!-- регулировать расст межд ссылками -->
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'index'%}">Главная</a>
                         </li>
