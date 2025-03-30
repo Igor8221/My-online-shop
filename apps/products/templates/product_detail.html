@@ -4,30 +4,34 @@
 
 {% block content %}
 <div class="container">
-    <h2 class="text-center">{{ product.name }}</h2>
+    <h4 class="text-center">{{ product.name }}</h4>
+    
     <div class="row">
+        <!-- Основное изображение (6 колонок) -->
         <div class="col-md-6">
             {% if product.main_image and product.main_image.image %}
-                <img src="{{ product.main_image.image.url }}" class="img-fluid rounded shadow mb-3" alt="{{ product.name }}">
+                <img src="{{ product.main_image.image.url }}" class="img-fluid rounded shadow mb-3 w-100" alt="{{ product.name }}">
             {% else %}
-                <img src="https://via.placeholder.com/500" class="img-fluid rounded shadow mb-3" alt="Изображение не доступно">
-            {% endif %}
-
-            {% if product.images.count > 1 %}
-                <div class="row mt-2">
-                    {% for image in product.images.all %}
-                        {% if not image.is_main %}
-                            <div class="col-4">
-                                <img src="{{ image.image.url }}" class="img-thumbnail" alt="Дополнительное изображение">
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+                <img src="https://via.placeholder.com/500" class="img-fluid rounded shadow mb-3 w-100" alt="Изображение не доступно">
             {% endif %}
         </div>
-        <div class="col-12">  <!-- сменил отображение страницы -->
+
+        <!-- Дополнительные изображения (6 колонки) -->
+        {% if product.images.count > 1 %}
+            <div class="col-md-6 d-flex flex-column">
+                {% for image in product.images.all %}
+                    {% if not image.is_main %}
+                        <img src="{{ image.image.url }}" class="img-fluid rounded shadow mb-3 w-100" alt="Дополнительное изображение">
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
             <div class="product-details">
-                <p><strong>Описание:</strong> {{ product.description }}</p>
+                <h6>{{ product.description }}</h6>
                 <p><strong>Цена:</strong> {{ product.price }} руб.</p>
                 <p><strong>Рейтинг:</strong>
                     <span class="text-warning">
@@ -62,11 +66,7 @@
 
             {% if user.is_staff %}
                 <a href="{% url 'edit_product' product.id %}" class="btn btn-warning mt-3">Редактировать карточку</a>
-            {% endif %}
-
-           <!--  Добавил удаление -->
-            {% if user.is_staff %}
-            <a href="{% url 'delete_product' product.id %}" class="btn btn-danger mt-3">Удалить карточку</a>
+                <a href="{% url 'delete_product' product.id %}" class="btn btn-danger mt-3">Удалить карточку</a>
             {% endif %}
 
             <a href="{% url 'product_list' %}" class="btn btn-secondary mt-3">Назад к списку товаров</a>

@@ -16,12 +16,18 @@ def order_detail(request, order_id):
         messages.error(request, "Вы не можете просматривать этот заказ.")
         return redirect('order_list')
 
-    if request.method == 'POST' and request.user.is_staff:
-        form = OrderStatusForm(request.POST, instance=order)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Статус заказа успешно обновлен.")
-            return redirect('order_detail', order_id=order.id)
+    if request.method == 'POST':
+        if request.user.is_staff:
+            if 'delete_order' in request.POST:
+                order.delete()
+                messages.success(request, "Заказ успешно удален.")
+                return redirect('order_list')
+
+            form = OrderStatusForm(request.POST, instance=order)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Статус заказа успешно обновлен.")
+                return redirect('order_detail', order_id=order.id)
     else:
         form = OrderStatusForm(instance=order) if request.user.is_staff else None
 

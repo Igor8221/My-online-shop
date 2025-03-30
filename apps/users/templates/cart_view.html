@@ -21,9 +21,9 @@
                 <tbody>
                     {% for item in cart.items.all %}
                         <tr>
-                            <td>{{ item.product.name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>{{ item.total_price }}</td>
+                            <td style="font-size: 1.1rem;">{{ item.product.name }}</td>
+                            <td style="font-size: 1.1rem;">{{ item.quantity }}</td>
+                            <td style="font-size: 1.1rem;">{{ item.total_price }}</td>
                             <td>
                                 <a href="{% url 'remove_from_cart' item.product.id %}" class="btn btn-danger">Удалить</a>
                             </td>
