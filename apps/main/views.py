@@ -12,18 +12,24 @@ from .forms import NewsForm
 from apps.users.models import Cart
 import random
 
-
+""" Формирование URL API """
 def index_page(request):
     api_url = "http://127.0.0.1:8000/api/categories-news/"
 
     try:
-        response = requests.get(api_url)
+        """ Запрос к API """
+        response = requests.get(api_url)  
         response.raise_for_status()  
+        
+        """ Превращает JSON-ответ в словарь Python """
         data = response.json()  
     except requests.RequestException as e:
         print(f"Ошибка при запросе API: {e}")
+        
+        """ При ошибке кладутся пустые списки чтоб шаблон не ломался """
         data = {'categories': [], 'latest_news': []}
-
+    
+    """ Подготовка контекста для шаблона """
     context = {
         'categories': data.get('categories', []),
         'latest_news': data.get('latest_news', [])
@@ -79,12 +85,16 @@ def trade_in(request):
 
 class CategoryNewsAPIView(APIView):
     def get(self, request, *args, **kwargs):
+        
+        """ получение категорий """
         categories = Category.objects.all()
         category_serializer = CategorySerializer(categories, many=True)
 
+        """ получение новостей """
         latest_news = News.objects.order_by('-published_at')[:2]
         news_serializer = NewsSerializer(latest_news, many=True)
 
+        """ получение популярных продуктов """
         popular_products = Product.objects.filter(rating__gt=0).order_by('-rating')[:3]
         if not popular_products:
             products = list(Product.objects.all())
@@ -94,13 +104,15 @@ class CategoryNewsAPIView(APIView):
                 popular_products = products
 
         product_serializer = ProductSerializer(popular_products, many=True)
-
+        
+        """ Проверка наличия товаров в корзине """
         cart_has_items = False
         if request.user.is_authenticated:
             cart = Cart.objects.filter(user=request.user).first()
             if cart and cart.items.exists():
                 cart_has_items = True
-
+        
+        """ Ответ в формате JSON """
         return Response({
             'categories': category_serializer.data,
             'latest_news': news_serializer.data,

@@ -20,10 +20,13 @@ class UserRegisterForm(UserCreationForm):
         }
 
     def clean(self):
+        
+        """ извлекает значения полей после того, как пользователь заполнил форму """
         cleaned_data = super().clean()
         email = cleaned_data.get("email")
         phone_number = cleaned_data.get("phone_number")
-
+        
+        """ проверка соответствия """
         if not email and not phone_number:
             raise forms.ValidationError("Необходимо заполнить либо email, либо номер телефона.")
         return cleaned_data
@@ -48,7 +51,7 @@ class CustomPasswordChangeForm(forms.Form):
     )
 
     def __init__(self, user, *args, **kwargs):
-        self.user = user
+        self.user = user # сохранение пользователя
         super().__init__(*args, **kwargs)
 
     def clean_old_password(self):
@@ -67,8 +70,8 @@ class CustomPasswordChangeForm(forms.Form):
 
     def save(self):
         password = self.cleaned_data['new_password1']
-        self.user.set_password(password)
-        self.user.save()
+        self.user.set_password(password) # Устанавливаем новый пароль пользователю
+        self.user.save() # сохраняем пользователя
 
 class ChangePhoneForm(forms.ModelForm):
     phone_number = forms.CharField(

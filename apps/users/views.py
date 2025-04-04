@@ -17,13 +17,13 @@ def add_to_cart(request, product_id):
         return redirect('login')
 
     product = get_object_or_404(Product, id=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart, created = Cart.objects.get_or_create(user=request.user)  # Получаем корзину пользователя или создаем её, если нет
 
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)  # Получаем товар в корзине или создаем новый
 
     if not created:
-        cart_item.quantity += 1
-        cart_item.save()
+        cart_item.quantity += 1  # Если товар уже есть в корзине, увеличиваем его количество.
+        cart_item.save()    # Сохраняем изменения в корзине.
 
     return redirect('cart')  
 
@@ -34,7 +34,7 @@ def remove_from_cart(request, product_id):
 
     cart = Cart.objects.get(user=request.user)
     product = get_object_or_404(Product, id=product_id)
-    cart_item = CartItem.objects.get(cart=cart, product=product)
+    cart_item = CartItem.objects.get(cart=cart, product=product)  # Получаем объект CartItem для данного товара в корзине.
     cart_item.delete()
 
     return redirect('cart')  
@@ -51,7 +51,7 @@ def cart_view(request):
 @login_required
 def profile(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
-    categories = Category.objects.all() if request.user.is_staff else None
+    categories = Category.objects.all() if request.user.is_staff else None  # Если пользователь администратор, показываем все категории.
     return render(request, 'profile.html', {'cart': cart, 'categories': categories})
 
 
@@ -64,14 +64,14 @@ def change_password(request):
             messages.success(request, 'Ваш пароль был успешно изменен!')
             return redirect('profile')
     else:
-        form = CustomPasswordChangeForm(request.user)
+        form = CustomPasswordChangeForm(request.user)   # Если форма не отправлена, создаем пустую форму.
     return render(request, 'change_password.html', {'form': form})
 
 @login_required
 def change_email(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        request.user.email = email
+        email = request.POST.get('email')   # Получаем новый email
+        request.user.email = email  # Изменяем email пользователя
         request.user.save()
         messages.success(request, 'Ваша почта была успешно изменена!')
         return redirect('profile')
@@ -83,27 +83,27 @@ def login_view(request):
         username_or_email_or_phone = request.POST.get('username_or_email_or_phone')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=username_or_email_or_phone, password=password)
+        user = authenticate(request, username=username_or_email_or_phone, password=password)  # Проверяем пользователя
 
         if user is not None:
-            login(request, user)
+            login(request, user)   # Авторизуем пользователя
             return redirect('profile')
         else:
             messages.error(request, 'Неверный логин или пароль.')
 
-    form = AuthenticationForm()
+    form = AuthenticationForm() # Создаем форму для логина
     return render(request, 'login.html', {'form': form})
 
 
 def register(request):
     if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
+        form = UserRegisterForm(request.POST)  # Получаем данные из формы регистрации
         if form.is_valid():
             form.save()
             messages.success(request, 'Регистрация прошла успешно! Пожалуйста, войдите.')
             return redirect('login')
     else:
-        form = UserRegisterForm()
+        form = UserRegisterForm() # Если форма не отправлена, показываем пустую форму
     return render(request, 'register.html', {'form': form})
 
 
@@ -147,16 +147,16 @@ def leave_review(request, product_id):
     if request.method == 'POST':
         rating = request.POST.get('rating')
         text = request.POST.get('text')
-        review = Review(product=product, user=request.user, text=text, rating=rating)
+        review = Review(product=product, user=request.user, text=text, rating=rating)  # Создаем отзыв.
         review.save()
-        return redirect('product_detail', product_id=product.id)
+        return redirect('product_detail', product_id=product.id)  # Перенаправляем на страницу товара.
     return render(request, 'leave_review.html', {'product': product})
 
 
 @login_required
 def change_phone_view(request):
     if request.method == 'POST':
-        form = ChangePhoneForm(request.POST, instance=request.user)
+        form = ChangePhoneForm(request.POST, instance=request.user) # Получаем форму для изменения номера телефона.
         if form.is_valid():
             form.save()
             messages.success(request, "Номер телефона успешно обновлен.")
@@ -164,6 +164,6 @@ def change_phone_view(request):
         else:
             messages.error(request, "Ошибка! Проверьте корректность номера.")
     else:
-        form = ChangePhoneForm(instance=request.user)
+        form = ChangePhoneForm(instance=request.user)  # Создаем форму с текущим номером телефона.
 
     return render(request, 'change_phone.html', {'form': form})

@@ -8,6 +8,8 @@ class Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
+
+        """  автоматическое создание слаг """
         if not self.slug:
             self.slug = slugify(self.name) 
         super().save(*args, **kwargs)
@@ -29,6 +31,8 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
+        
+        """ каждый новый продукт получит уникальный артикул """
         if not self.article:
             self.article = str(Product.objects.count() + 1).zfill(5)
 
@@ -52,6 +56,8 @@ class ProductImage(models.Model):
     is_main = models.BooleanField(default=False)  
 
     def save(self, *args, **kwargs):
+        
+        """  проверка основного изображения и дополн """
         if self.is_main:
             ProductImage.objects.filter(product=self.product).update(is_main=False)
         super().save(*args, **kwargs)
@@ -79,6 +85,8 @@ class Review(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        
+        """ сначала сохраняется сам объект отзыва, затем пересчитывается средний рейтинг товара """
         self.product.rating = self.product.reviews.aggregate(models.Avg('rating'))['rating__avg'] or 0
         self.product.save()
 

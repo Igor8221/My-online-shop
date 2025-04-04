@@ -31,7 +31,8 @@ def add_product(request):
         category_id = request.POST.get('category')
         main_image = request.FILES.get('main_image')
         additional_images = request.FILES.getlist('additional_images')
-
+        
+        """ проверка существующей категории """
         try:
             category = Category.objects.get(id=category_id)
         except Category.DoesNotExist:

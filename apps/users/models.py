@@ -20,7 +20,7 @@ class Cart(models.Model):
     def __str__(self):
         return f'Cart of {self.user.username}'
 
-    @property
+    @property  # превращает метод в "свойство", чтобы можно было писать cart.total_price
     def total_price(self):
         return sum(item.total_price() for item in self.items.all())
 
